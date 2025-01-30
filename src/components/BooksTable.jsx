@@ -65,27 +65,27 @@ function BooksTable({ books, favorites, toggleFavorite }) {
             onClick={() => handleSort('title')}
             style={{ cursor: 'pointer' }}
           >
-            Title{sortIndicator('title')}
+            TITLE{sortIndicator('title')}
           </th>
           <th
             onClick={() => handleSort('author')}
             style={{ cursor: 'pointer' }}
           >
-            Author{sortIndicator('author')}
+            AUTHOR{sortIndicator('author')}
           </th>
           <th
             onClick={() => handleSort('year')}
             style={{ cursor: 'pointer' }}
           >
-            Year{sortIndicator('year')}
+            YEAR{sortIndicator('year')}
           </th>
 
-          <th>Genres</th>
+          <th>GENRE</th>
           <th
             onClick={() => handleSort('favorite')}
             style={{ cursor: 'pointer' }}
           >
-            Currently Reading{sortIndicator('favorite')}
+            CURRENTLY READING{sortIndicator('favorite')}
           </th>
         </tr>
       </thead>

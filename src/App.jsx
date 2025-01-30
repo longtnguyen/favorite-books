@@ -3,6 +3,7 @@ import Books from './services/booksService';
 import BooksTable from './components/BooksTable';
 import { debounce } from 'lodash';
 import './styles/App.scss';
+import LoadingIndicator from './components/LoadingIndicator';
 
 function App() {
   const [books, setBooks] = useState([]);
@@ -148,13 +149,32 @@ function App() {
               onChange={handleInputChange}
               onFocus={() => setShowSuggestions(true)}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-              placeholder="Type to search genres..."
+              placeholder="Genres"
             />
-            {searchInput && (
-              <button className="clear-button" onClick={clearSearch}>
-                ×
-              </button>
-            )}
+          {searchInput === '' && (
+            <img
+              src="/icon-right.png"
+              alt="Dropdown Chevron"
+              className="chevron-icon"
+              aria-hidden="true"
+            />
+          )}
+          {searchInput !== '' && (
+            <img
+              src="/clear.png"
+              alt="Clear input"
+              className="clear-icon"
+              onClick={clearSearch}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  clearSearch();
+                }
+              }}
+              aria-label="Clear genre filter"
+            />
+          )}
             {showSuggestions && (
               <ul className="suggestions-list">
                 {filteredGenres.map((genre) => (
@@ -174,7 +194,7 @@ function App() {
 
       <main>
         {loading ? (
-          <p className="loading-text">Loading...</p>
+          <LoadingIndicator />
         ) : (
           <BooksTable
             books={books}

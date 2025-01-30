@@ -1,6 +1,7 @@
 $app-max-width: 1200px;
 $header-bg: #f5f5f5;
 $border-color: #D9D9D9;
+$text-color: #757575;
 $border-color-cell: #F2F2F2;
 $font-family: 'Helvetica', Arial, sans-serif;
 $star-size: 1.5rem;
@@ -41,19 +42,12 @@ $hover-bg-color: #f0f0f0;
     }
   }
 
-  .loading-text {
-    text-align: center;
-    font-size: 1.2rem;
-    margin-top: 2rem;
-  }
-
   .books-table {
     width: 100%;
     border-collapse: collapse;
 
     thead {
-      //Note: figma specify 10px but that seems way too small
-      font-size: 0.875rem;
+      font-size: 0.625rem;
     }
 
     th,
@@ -65,12 +59,13 @@ $hover-bg-color: #f0f0f0;
       vertical-align: unset;
       box-sizing:border-box;
       padding: 1rem;
+      color: $text-color;
     }
     th {
       height: 3.25rem;
-      color: #757575;
+      color: $text-color;
       border-bottom: 1px solid $border-color;
-      font-weight: 400;
+      font-weight: 700;
     }
     th.rank-col {
       width: 3.75rem;
@@ -78,6 +73,7 @@ $hover-bg-color: #f0f0f0;
     }
 
     .title-cell {
+      color: #333333;
       text-align: left;
       font-weight: bold;
     }
@@ -118,22 +114,40 @@ $hover-bg-color: #f0f0f0;
     padding: .5rem;
     font-size: 1rem;
     border: 1px solid $border-color;
+    &:focus {
+      outline: none !important;
+      border: 1px solid #2BB24C;
+    }
     border-radius: .25rem;
     padding-right: 1rem;
   }
   
-  .clear-button {
+  .chevron-icon,
+  .clear-icon {
     position: absolute;
-    right: .5rem;
     top: 50%;
     transform: translateY(-50%);
-    background: none;
-    border: none;
-    font-size: 1rem;
+    width: 16px;
+    height: 16px;
+  }
+
+  .chevron-icon {
+    right: -1rem;
+    pointer-events: none;
+  }
+
+  .clear-icon {
+    right: -1rem;
+    pointer-events: auto;
     cursor: pointer;
-    color: #999;
+    opacity: 0.6;
+
     &:hover {
-      color: #333;
+      opacity: 1;
+    }
+
+    &:focus {
+      outline: none;
     }
   }
   
