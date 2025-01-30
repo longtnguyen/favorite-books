@@ -58,9 +58,6 @@ function BooksTable({ books, favorites, toggleFavorite }) {
     <table className="books-table">
       <thead>
         <tr>
-          <th className="rank-col">Rank</th>
-
-          {/* Clickable columns for sorting */}
           <th
             onClick={() => handleSort('title')}
             style={{ cursor: 'pointer' }}
@@ -99,7 +96,6 @@ function BooksTable({ books, favorites, toggleFavorite }) {
               <BookRow
                 key={bookKey}
                 book={book}
-                index={index}
                 isFavorite={!!favorites[bookKey]}
                 toggleFavorite={() => toggleFavorite(bookKey)}
               />

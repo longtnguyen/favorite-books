@@ -5,7 +5,6 @@ function BookRow({ book, index, isFavorite, toggleFavorite }) {
 
   return (
     <tr>
-      <td>{index + 1}</td>
       <td className="title-cell">{title}</td>
       <td>{author}</td>
       <td>{year}</td>

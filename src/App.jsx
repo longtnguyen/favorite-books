@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Books from './services/booksService';
 import BooksTable from './components/BooksTable';
+import { debounce } from 'lodash';
 import './styles/App.scss';
 
 function App() {
   const [books, setBooks] = useState([]);
-  const [allGenres, setAllGenres] = useState(['All']);
+  const [allGenres, setAllGenres] = useState([]);
   const [genreFilter, setGenreFilter] = useState('All');
   const [loading, setLoading] = useState(false);
-  const [favorites, setFavorites] = useState({}); // New state for favorites
+  const [favorites, setFavorites] = useState({});
+  const [searchInput, setSearchInput] = useState('');
+  const [filteredGenres, setFilteredGenres] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   // Load favorites from localStorage on mount
   useEffect(() => {
@@ -29,7 +33,6 @@ function App() {
       setLoading(true);
       try {
         const booksAll = await new Books().askListBooks('All');
-        // Collect unique genres
         const uniqueGenres = new Set();
         booksAll.forEach((b) => {
           if (Array.isArray(b.genre)) {
@@ -37,7 +40,6 @@ function App() {
           }
         });
 
-        // Convert each genre to "Title Case" and sort alphabetically
         const sorted = Array.from(uniqueGenres)
           .map((g) =>
             g
@@ -47,8 +49,8 @@ function App() {
           )
           .sort((a, b) => a.localeCompare(b));
 
-        // Add "All" to the front
-        setAllGenres(['All', ...sorted]);
+        setAllGenres(sorted); // Removed 'All' from the list
+        setFilteredGenres(sorted); // Initialize filtered genres without 'All'
       } catch (err) {
         console.error('Failed to fetch all books:', err);
       } finally {
@@ -57,21 +59,24 @@ function App() {
     };
     fetchAllGenres();
   }, []);
-
-  // Whenever genreFilter changes, fetch the filtered list from server
-  useEffect(() => {
-    const fetchBooks = async () => {
+  // Debounced fetchBooks function
+  const debouncedFetchBooks = useCallback(
+    debounce(async (filter) => {
       setLoading(true);
       try {
-        const filtered = await new Books().askListBooks(genreFilter);
+        const filtered = await new Books().askListBooks(filter);
         setBooks(filtered);
       } catch (err) {
         console.error('Failed to fetch filtered books:', err);
       } finally {
         setLoading(false);
       }
-    };
-    fetchBooks();
+    }, 300),
+    []
+  );
+  // Whenever genreFilter changes, fetch the filtered list from server
+  useEffect(() => {
+    debouncedFetchBooks(genreFilter);
   }, [genreFilter]);
 
   // Toggle favorite status for a book
@@ -82,24 +87,88 @@ function App() {
     }));
   };
 
+  // Handle input change for autocomplete
+  const handleInputChange = (e) => {
+    const input = e.target.value;
+    setSearchInput(input);
+
+    // Filter genres based on input (excluding 'All')
+    const filtered = allGenres.filter((genre) =>
+      genre.toLowerCase().includes(input.toLowerCase())
+    );
+    setFilteredGenres(filtered);
+    setShowSuggestions(true);
+
+    // If input is empty, set genreFilter to 'All'
+    if (input.trim() === '') {
+      setGenreFilter('All');
+    }
+  };
+
+  // Handle genre selection from suggestions
+  const handleGenreSelect = (genre) => {
+    setGenreFilter(genre);
+    setSearchInput(genre);
+    setShowSuggestions(false);
+  };
+
+  // Clear the search input and show all books
+  const clearSearch = () => {
+    setSearchInput('');
+    setGenreFilter('All');
+    setShowSuggestions(false);
+  };
+
+  // Bold the matching part of the genre name
+  const highlightMatch = (genre, input) => {
+    const index = genre.toLowerCase().indexOf(input.toLowerCase());
+    if (index === -1) return genre;
+
+    return (
+      <>
+        {genre.substring(0, index)}
+        <strong>{genre.substring(index, index + input.length)}</strong>
+        {genre.substring(index + input.length)}
+      </>
+    );
+  };
+
   return (
     <div className="app-container">
       <header>
         <h1 className="title">My Favorite Books</h1>
 
         <div className="genre-filter">
-          <label htmlFor="genre-select">Filter by genre:</label>
-          <select
-            id="genre-select"
-            value={genreFilter}
-            onChange={(e) => setGenreFilter(e.target.value)}
-          >
-            {allGenres.map((g) => (
-              <option value={g} key={g}>
-                {g}
-              </option>
-            ))}
-          </select>
+          <label htmlFor="genre-autocomplete">Filter by genre:</label>
+          <div className="autocomplete-container">
+            <input
+              id="genre-autocomplete"
+              type="text"
+              value={searchInput}
+              onChange={handleInputChange}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+              placeholder="Type to search genres..."
+            />
+            {searchInput && (
+              <button className="clear-button" onClick={clearSearch}>
+                ×
+              </button>
+            )}
+            {showSuggestions && (
+              <ul className="suggestions-list">
+                {filteredGenres.map((genre) => (
+                  <li
+                    key={genre}
+                    onClick={() => handleGenreSelect(genre)}
+                    className="suggestion-item"
+                  >
+                    {highlightMatch(genre, searchInput)}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </header>
 
