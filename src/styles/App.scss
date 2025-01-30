@@ -2,7 +2,10 @@ $app-max-width: 900px;
 $header-bg: #f5f5f5;
 $border-color: #ccc;
 $font-family: 'Helvetica Neue', Arial, sans-serif;
-
+$star-size: 1.5rem;
+$star-color: #ccc;
+$star-color-favorited: #f39c12;
+$hover-bg-color: #f0f0f0; // New variable for hover background color
 .app-container {
   margin: 0 auto;
   max-width: $app-max-width;
@@ -52,9 +55,12 @@ $font-family: 'Helvetica Neue', Arial, sans-serif;
       background-color: #eee;
     }
 
-    th, td {
+    th,
+    td {
       padding: 0.75rem;
       border-bottom: 1px solid $border-color;
+      text-align: left;
+      vertical-align: middle; // Ensure vertical centering
     }
 
     th.rank-col {
@@ -68,6 +74,36 @@ $font-family: 'Helvetica Neue', Arial, sans-serif;
 
     .title-cell {
       font-weight: bold;
+    }
+
+    .favorite-cell {
+        text-align: center; // Center the star horizontally
+        cursor: pointer; // Change cursor to pointer when hovering over the cell
+        user-select: none; // Prevent text selection on double-click
+      
+        /* Highlight cell on hover with light grey background */
+        &:hover {
+          background-color: $hover-bg-color; // Use the defined light grey color
+        }
+      
+        /* Focus styles for accessibility */
+        &:focus {
+          background-color: lighten($hover-bg-color, 10%); // Slightly lighter on focus
+        }
+      }
+
+    .favorite-star {
+      font-size: $star-size;
+      color: $star-color;
+      transition: color 0.3s;
+
+      &.favorited {
+        color: $star-color-favorited;
+      }
+
+      &:hover {
+        color: darken($star-color, 10%);
+      }
     }
   }
 }

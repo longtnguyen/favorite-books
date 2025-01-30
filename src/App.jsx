@@ -1,48 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import Books from './services/booksService';
 import BooksTable from './components/BooksTable';
+import './styles/App.scss';
 
 function App() {
   const [books, setBooks] = useState([]);
   const [allGenres, setAllGenres] = useState(['All']);
   const [genreFilter, setGenreFilter] = useState('All');
   const [loading, setLoading] = useState(false);
+  const [favorites, setFavorites] = useState({}); // New state for favorites
 
-  // Sorting config: which column, which direction
-  const [sortConfig, setSortConfig] = useState({
-    key: null,     // 'title', 'author', 'year'
-    direction: 'asc',
-  });
+  // Load favorites from localStorage on mount
+  useEffect(() => {
+    const storedFavorites = localStorage.getItem('favoriteBooks');
+    if (storedFavorites) {
+      setFavorites(JSON.parse(storedFavorites));
+    }
+  }, []);
 
-  // On mount, fetch all books => build a unique list of genres
+  // Save favorites to localStorage whenever favorites state changes
+  useEffect(() => {
+    localStorage.setItem('favoriteBooks', JSON.stringify(favorites));
+  }, [favorites]);
+
+  // On mount, fetch all books once to build the genre list
   useEffect(() => {
     const fetchAllGenres = async () => {
       setLoading(true);
       try {
         const booksAll = await new Books().askListBooks('All');
-        
-        // Collect unique genres, help with deduping
+        // Collect unique genres
         const uniqueGenres = new Set();
         booksAll.forEach((b) => {
           if (Array.isArray(b.genre)) {
             b.genre.forEach((g) => uniqueGenres.add(g));
           }
         });
-  
-        // 1) Convert each genre to "Title Case" (first letter of each word uppercase)
-        // 2) Sort them alphabetically, this might not be needed, but here just in case
+
+        // Convert each genre to "Title Case" and sort alphabetically
         const sorted = Array.from(uniqueGenres)
-          .map((g) => {
-            return g
+          .map((g) =>
+            g
               .split(' ')
-              .map(
-                (word) => word.charAt(0).toUpperCase() + word.slice(1)
-              )
-              .join(' ');
-          })
+              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ')
+          )
           .sort((a, b) => a.localeCompare(b));
-  
-        // 3) Add 'All' to the front
+
+        // Add "All" to the front
         setAllGenres(['All', ...sorted]);
       } catch (err) {
         console.error('Failed to fetch all books:', err);
@@ -69,58 +74,13 @@ function App() {
     fetchBooks();
   }, [genreFilter]);
 
-  // Handle dropdown changes
-  const handleGenreChange = (e) => {
-    setGenreFilter(e.target.value);
+  // Toggle favorite status for a book
+  const toggleFavorite = (bookKey) => {
+    setFavorites((prevFavorites) => ({
+      ...prevFavorites,
+      [bookKey]: !prevFavorites[bookKey],
+    }));
   };
-
-  // Handle table column header click => update sortConfig
-  const handleSortChange = (column) => {
-    setSortConfig((prev) => {
-      // If clicking the same column, toggle direction
-      if (prev.key === column) {
-        return {
-          ...prev,
-          direction: prev.direction === 'asc' ? 'desc' : 'asc',
-        };
-      } else {
-        // Switching to a new column, default to 'asc'
-        return { key: column, direction: 'asc' };
-      }
-    });
-  };
-
-  // Sort the books in memory, according to sortConfig
-  const sortedBooks = React.useMemo(() => {
-    if (!sortConfig.key) return books; // no sort column chosen
-    const { key, direction } = sortConfig;
-    // Make a copy to avoid mutating state
-    const sorted = [...books];
-
-    sorted.sort((a, b) => {
-      let valA = a[key];
-      let valB = b[key];
-
-      // For "year", let's do numeric comparison
-      // For "title"/"author", case-insensitive string compare
-      if (key === 'year') {
-        return Number(valA) - Number(valB);
-      } else {
-        // key is 'title' or 'author'
-        valA = String(valA).toLowerCase();
-        valB = String(valB).toLowerCase();
-        if (valA < valB) return -1;
-        if (valA > valB) return 1;
-        return 0;
-      }
-    });
-
-    // Reverse if direction is 'desc'
-    if (direction === 'desc') {
-      sorted.reverse();
-    }
-    return sorted;
-  }, [books, sortConfig]);
 
   return (
     <div className="app-container">
@@ -132,7 +92,7 @@ function App() {
           <select
             id="genre-select"
             value={genreFilter}
-            onChange={handleGenreChange}
+            onChange={(e) => setGenreFilter(e.target.value)}
           >
             {allGenres.map((g) => (
               <option value={g} key={g}>
@@ -148,9 +108,9 @@ function App() {
           <p className="loading-text">Loading...</p>
         ) : (
           <BooksTable
-            books={sortedBooks}
-            sortConfig={sortConfig}
-            onSortChange={handleSortChange}
+            books={books}
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
           />
         )}
       </main>
