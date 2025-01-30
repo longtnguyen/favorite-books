@@ -8,7 +8,13 @@ function App() {
   const [genreFilter, setGenreFilter] = useState('All');
   const [loading, setLoading] = useState(false);
 
-  // On mount, fetch all books
+  // Sorting config: which column, which direction
+  const [sortConfig, setSortConfig] = useState({
+    key: null,     // 'title', 'author', 'year'
+    direction: 'asc',
+  });
+
+  // On mount, fetch all books => build a unique list of genres
   useEffect(() => {
     const fetchAllGenres = async () => {
       setLoading(true);
@@ -38,14 +44,12 @@ function App() {
   
         // 3) Add 'All' to the front
         setAllGenres(['All', ...sorted]);
-  
       } catch (err) {
         console.error('Failed to fetch all books:', err);
       } finally {
         setLoading(false);
       }
     };
-  
     fetchAllGenres();
   }, []);
 
@@ -65,9 +69,58 @@ function App() {
     fetchBooks();
   }, [genreFilter]);
 
+  // Handle dropdown changes
   const handleGenreChange = (e) => {
     setGenreFilter(e.target.value);
   };
+
+  // Handle table column header click => update sortConfig
+  const handleSortChange = (column) => {
+    setSortConfig((prev) => {
+      // If clicking the same column, toggle direction
+      if (prev.key === column) {
+        return {
+          ...prev,
+          direction: prev.direction === 'asc' ? 'desc' : 'asc',
+        };
+      } else {
+        // Switching to a new column, default to 'asc'
+        return { key: column, direction: 'asc' };
+      }
+    });
+  };
+
+  // Sort the books in memory, according to sortConfig
+  const sortedBooks = React.useMemo(() => {
+    if (!sortConfig.key) return books; // no sort column chosen
+    const { key, direction } = sortConfig;
+    // Make a copy to avoid mutating state
+    const sorted = [...books];
+
+    sorted.sort((a, b) => {
+      let valA = a[key];
+      let valB = b[key];
+
+      // For "year", let's do numeric comparison
+      // For "title"/"author", case-insensitive string compare
+      if (key === 'year') {
+        return Number(valA) - Number(valB);
+      } else {
+        // key is 'title' or 'author'
+        valA = String(valA).toLowerCase();
+        valB = String(valB).toLowerCase();
+        if (valA < valB) return -1;
+        if (valA > valB) return 1;
+        return 0;
+      }
+    });
+
+    // Reverse if direction is 'desc'
+    if (direction === 'desc') {
+      sorted.reverse();
+    }
+    return sorted;
+  }, [books, sortConfig]);
 
   return (
     <div className="app-container">
@@ -94,7 +147,11 @@ function App() {
         {loading ? (
           <p className="loading-text">Loading...</p>
         ) : (
-          <BooksTable books={books} />
+          <BooksTable
+            books={sortedBooks}
+            sortConfig={sortConfig}
+            onSortChange={handleSortChange}
+          />
         )}
       </main>
     </div>
