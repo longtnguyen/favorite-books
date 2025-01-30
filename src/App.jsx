@@ -136,10 +136,10 @@ function App() {
   return (
     <div className="app-container">
       <header>
-        <h1 className="title">My Favorite Books</h1>
+        {/* I have no idea where to get the book icons so I use an alternative one, I hope this is okay*/}
+        <h1 className="title">📚 My Favorite Books</h1>
 
         <div className="genre-filter">
-          <label htmlFor="genre-autocomplete">Filter by genre:</label>
           <div className="autocomplete-container">
             <input
               id="genre-autocomplete"

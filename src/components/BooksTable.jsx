@@ -25,6 +25,9 @@ function BooksTable({ books, favorites, toggleFavorite }) {
   // Helper to render the symbol next to the header.
   const sortIndicator = (columnKey) => {
     if (sortConfig.key !== columnKey) return null;
+    //Note: This part is a bit awkward since I am not showing the sortable icon
+    // Ultimately I decided to leave it off so I can get as close to the figma as possible
+    // while still allow the sorting capability
     return sortConfig.direction === 'asc' ? ' ▲' : ' ▼';
   };
 
@@ -83,7 +86,7 @@ function BooksTable({ books, favorites, toggleFavorite }) {
             style={{ cursor: 'pointer' }}
           >
             Currently Reading{sortIndicator('favorite')}
-          </th> {/* New Favorite Column Header */}
+          </th>
         </tr>
       </thead>
 
