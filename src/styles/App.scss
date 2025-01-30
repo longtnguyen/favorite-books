@@ -1,0 +1,73 @@
+$app-max-width: 900px;
+$header-bg: #f5f5f5;
+$border-color: #ccc;
+$font-family: 'Helvetica Neue', Arial, sans-serif;
+
+.app-container {
+  margin: 0 auto;
+  max-width: $app-max-width;
+  font-family: $font-family;
+  padding: 1rem;
+
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $header-bg;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+
+    .title {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+
+    .genre-filter {
+      label {
+        margin-right: 0.5rem;
+      }
+
+      select {
+        padding: 0.3rem 0.5rem;
+        border-radius: 4px;
+        border: 1px solid $border-color;
+      }
+    }
+  }
+
+  .loading-text {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+  }
+
+  .books-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      background-color: #eee;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      border-bottom: 1px solid $border-color;
+    }
+
+    th.rank-col {
+      width: 60px;
+      text-align: center;
+    }
+
+    td:first-child {
+      text-align: center;
+    }
+
+    .title-cell {
+      font-weight: bold;
+    }
+  }
+}
