@@ -1,0 +1,72 @@
+@import '../../styles/abstracts/variables';
+
+.autocomplete-container {
+  position: relative;
+  width: 100%;
+  max-width: 18.75rem;
+
+  #genre-autocomplete {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid $border-color;
+    border-radius: 0.25rem;
+
+    &:focus {
+      outline: none;
+      border: 2px solid #2BB24C;
+      box-shadow: 0 0 5px rgba(43, 178, 76, 0.5);
+    }
+  }
+
+  .chevron-icon,
+  .clear-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: $icon-size;
+    height: $icon-size;
+  }
+
+  .chevron-icon {
+    right: 1rem;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .clear-icon {
+    right: 1rem;
+    pointer-events: auto;
+    cursor: pointer;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .suggestions-list {
+    position: absolute;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: $z-index-autocomplete;
+
+    .suggestion-item {
+      padding: 0.625rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $hover-bg-color;
+      }
+    }
+  }
+}

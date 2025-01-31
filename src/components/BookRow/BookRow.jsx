@@ -1,10 +1,18 @@
 import React from 'react';
 
-function BookRow({ book, index, isFavorite, toggleFavorite }) {
+function BookRow({ book, isFavorite, toggleFavorite }) {
   const { title, author, year, genre, id } = book;
 
   return (
-    <tr>
+    <tr
+      onClick={() => toggleFavorite(id)}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          toggleFavorite(id);
+        }
+      }}
+    >
       <td className="title-cell">{title}</td>
       <td>{author}</td>
       <td>{year}</td>
@@ -12,14 +20,7 @@ function BookRow({ book, index, isFavorite, toggleFavorite }) {
       
       <td
         className="favorite-cell"
-        onClick={() => toggleFavorite(id)}
         role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            toggleFavorite(id);
-          }
-        }}
         aria-label={isFavorite ? 'Unmark as currently reading' : 'Mark as currently reading'}
       >
         <span className={`favorite-star ${isFavorite ? 'favorited' : ''}`}>

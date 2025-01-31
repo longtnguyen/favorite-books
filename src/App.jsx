@@ -1,23 +1,24 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Books from './services/booksService';
-import BooksTable from './components/BooksTable';
-import { debounce } from 'lodash';
-import './styles/App.scss';
-import LoadingIndicator from './components/LoadingIndicator';
+import React, { useState, useEffect, useCallback } from "react";
+import Books from "./services/booksService";
+import BooksTable from "./components/BooksTable/BooksTable";
+import { debounce } from "lodash";
+import "./App.scss";
+import LoadingIndicator from "./components/LoadingIndicator/LoadingIndicator";
+import Autocomplete from "./components/Autocomplete/Autocomplete";
 
 function App() {
   const [books, setBooks] = useState([]);
   const [allGenres, setAllGenres] = useState([]);
-  const [genreFilter, setGenreFilter] = useState('All');
+  const [genreFilter, setGenreFilter] = useState("All");
   const [loading, setLoading] = useState(false);
   const [favorites, setFavorites] = useState({});
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState("");
   const [filteredGenres, setFilteredGenres] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   // Load favorites from localStorage on mount
   useEffect(() => {
-    const storedFavorites = localStorage.getItem('favoriteBooks');
+    const storedFavorites = localStorage.getItem("favoriteBooks");
     if (storedFavorites) {
       setFavorites(JSON.parse(storedFavorites));
     }
@@ -25,7 +26,7 @@ function App() {
 
   // Save favorites to localStorage whenever favorites state changes
   useEffect(() => {
-    localStorage.setItem('favoriteBooks', JSON.stringify(favorites));
+    localStorage.setItem("favoriteBooks", JSON.stringify(favorites));
   }, [favorites]);
 
   // On mount, fetch all books once to build the genre list
@@ -33,7 +34,7 @@ function App() {
     const fetchAllGenres = async () => {
       setLoading(true);
       try {
-        const booksAll = await new Books().askListBooks('All');
+        const booksAll = await new Books().askListBooks("All");
         const uniqueGenres = new Set();
         booksAll.forEach((b) => {
           if (Array.isArray(b.genre)) {
@@ -44,16 +45,16 @@ function App() {
         const sorted = Array.from(uniqueGenres)
           .map((g) =>
             g
-              .split(' ')
+              .split(" ")
               .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(' ')
+              .join(" ")
           )
           .sort((a, b) => a.localeCompare(b));
 
-        setAllGenres(sorted); // Removed 'All' from the list
-        setFilteredGenres(sorted); // Initialize filtered genres without 'All'
+        setAllGenres(sorted);
+        setFilteredGenres(sorted);
       } catch (err) {
-        console.error('Failed to fetch all books:', err);
+        console.error("Failed to fetch all books:", err);
       } finally {
         setLoading(false);
       }
@@ -68,7 +69,7 @@ function App() {
         const filtered = await new Books().askListBooks(filter);
         setBooks(filtered);
       } catch (err) {
-        console.error('Failed to fetch filtered books:', err);
+        console.error("Failed to fetch filtered books:", err);
       } finally {
         setLoading(false);
       }
@@ -101,8 +102,8 @@ function App() {
     setShowSuggestions(true);
 
     // If input is empty, set genreFilter to 'All'
-    if (input.trim() === '') {
-      setGenreFilter('All');
+    if (input.trim() === "") {
+      setGenreFilter("All");
     }
   };
 
@@ -115,80 +116,27 @@ function App() {
 
   // Clear the search input and show all books
   const clearSearch = () => {
-    setSearchInput('');
-    setGenreFilter('All');
+    setSearchInput("");
+    setGenreFilter("All");
     setShowSuggestions(false);
-  };
-
-  // Bold the matching part of the genre name
-  const highlightMatch = (genre, input) => {
-    const index = genre.toLowerCase().indexOf(input.toLowerCase());
-    if (index === -1) return genre;
-
-    return (
-      <>
-        {genre.substring(0, index)}
-        <strong>{genre.substring(index, index + input.length)}</strong>
-        {genre.substring(index + input.length)}
-      </>
-    );
   };
 
   return (
     <div className="app-container">
       <header>
-        {/* I have no idea where to get the book icons so I use an alternative one, I hope this is okay*/}
+        {/* I cannot download the book icons from Figma so I use an alternative one, I hope this is okay*/}
         <h1 className="title">📚 My Favorite Books</h1>
 
         <div className="genre-filter">
-          <div className="autocomplete-container">
-            <input
-              id="genre-autocomplete"
-              type="text"
-              value={searchInput}
-              onChange={handleInputChange}
-              onFocus={() => setShowSuggestions(true)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-              placeholder="Genres"
-            />
-          {searchInput === '' && (
-            <img
-              src="/icon-right.png"
-              alt="Dropdown Chevron"
-              className="chevron-icon"
-              aria-hidden="true"
-            />
-          )}
-          {searchInput !== '' && (
-            <img
-              src="/clear.png"
-              alt="Clear input"
-              className="clear-icon"
-              onClick={clearSearch}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  clearSearch();
-                }
-              }}
-              aria-label="Clear genre filter"
-            />
-          )}
-            {showSuggestions && (
-              <ul className="suggestions-list">
-                {filteredGenres.map((genre) => (
-                  <li
-                    key={genre}
-                    onClick={() => handleGenreSelect(genre)}
-                    className="suggestion-item"
-                  >
-                    {highlightMatch(genre, searchInput)}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <Autocomplete
+            searchInput={searchInput}
+            handleInputChange={handleInputChange}
+            setShowSuggestions={setShowSuggestions}
+            clearSearch={clearSearch}
+            showSuggestions={showSuggestions}
+            filteredGenres={filteredGenres}
+            handleGenreSelect={handleGenreSelect}
+          />
         </div>
       </header>
 

@@ -5,16 +5,14 @@ export default class Books {
     return new Promise((resolve) => {
       window.setTimeout(() => {
         let allBooks = data.books || [];
-
-        // Filter if genre != 'All'
         if (genre && genre !== 'All') {
           const lower = genre.toLowerCase();
           allBooks = allBooks.filter((book) =>
             book.genre.some((g) => g.toLowerCase() === lower)
           );
         }
-
-        resolve(allBooks);
+        const truncatedBookList = allBooks.slice(0, 10);
+        resolve(truncatedBookList);
       }, this._random());
     });
   }

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import BookRow from './BookRow';
+import BookRow from '../BookRow/BookRow';
+import './BooksTable.scss';
 // Note: Client-side sorting is implemented here to demonstrate a different way we can accomplish sorting.
 // In a production environment, server-side sortin might be better, especially when the source of truth resides on the server.
 function BooksTable({ books, favorites, toggleFavorite }) {
@@ -33,9 +34,8 @@ function BooksTable({ books, favorites, toggleFavorite }) {
 
   // Sort the books array based on sortConfig.
   const sortedBooks = useMemo(() => {
-    if (!sortConfig.key) return books; // No sorting yet
+    if (!sortConfig.key) return books;
 
-    // Create a copy to sort
     const sorted = [...books].sort((a, b) => {
       let aVal, bVal;
 
@@ -92,7 +92,7 @@ function BooksTable({ books, favorites, toggleFavorite }) {
 
       <tbody>
         {sortedBooks && sortedBooks.length > 0 ? (
-          sortedBooks.map((book, index) => {
+          sortedBooks.map((book) => {
             // Create a unique key for each book
             const bookKey = `${book.title}-${book.author}-${book.year}`;
             return (

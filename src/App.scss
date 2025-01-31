@@ -1,0 +1,8 @@
+@import './styles/abstracts/variables';
+
+.app-container {
+  margin-left: 5rem;
+  margin-top: 5rem;
+  max-width: $app-max-width;
+  font-family: $font-family;
+}

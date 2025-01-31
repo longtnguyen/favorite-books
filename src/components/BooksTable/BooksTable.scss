@@ -1,0 +1,62 @@
+@import '../../styles/abstracts/variables';
+
+.books-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    font-size: 0.625rem;
+  }
+  tr {
+    &:hover {
+      background-color: $hover-bg-color;
+    }
+  }
+  th,
+  td {
+    border-bottom: 1px solid $border-color-cell;
+    width: 14.375rem;
+    height: 8.641rem;
+    text-align: left;
+    vertical-align: unset;
+    box-sizing: border-box;
+    padding: 1rem;
+    color: $text-color;
+
+  }
+
+  th {
+    height: 3.25rem;
+    color: $text-color;
+    border-bottom: 1px solid $border-color;
+    font-weight: 700;
+    background-color: white !important;
+  }
+
+  .title-cell {
+    color: #333333;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .favorite-cell {
+    width: 7.5rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .favorite-star {
+    font-size: $star-size;
+    color: $star-color;
+    margin-left: 2rem;
+    transition: color 0.3s;
+
+    &.favorited {
+      color: $star-color-favorited;
+    }
+
+    &:hover {
+      color: darken($star-color, 10%);
+    }
+  }
+}
