@@ -15,7 +15,7 @@
   th,
   td {
     border-bottom: 1px solid $border-color-cell;
-    width: 14.375rem;
+    min-width: 14.375rem;
     height: 8.641rem;
     text-align: left;
     vertical-align: unset;
@@ -24,6 +24,7 @@
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     color: $text-color;
+    box-sizing: border-box;
   }
 
   th {
