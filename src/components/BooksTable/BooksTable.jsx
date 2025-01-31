@@ -1,11 +1,11 @@
-import React, { useState, useMemo } from 'react';
-import BookRow from '../BookRow/BookRow';
-import './BooksTable.scss';
+import React, { useState, useMemo } from "react";
+import BookRow from "../BookRow/BookRow";
+import "./BooksTable.scss";
 // Note: Client-side sorting is implemented here to demonstrate a different way we can accomplish sorting.
 // In a production environment, server-side sortin might be better, especially when the source of truth resides on the server.
 function BooksTable({ books, favorites, toggleFavorite }) {
   // Track which column is sorted and the sort direction ("asc" or "desc").
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
   // Toggle or set the sort direction whenever a header is clicked.
   const handleSort = (columnKey) => {
@@ -14,11 +14,11 @@ function BooksTable({ books, favorites, toggleFavorite }) {
         // Toggle direction
         return {
           ...prev,
-          direction: prev.direction === 'asc' ? 'desc' : 'asc',
+          direction: prev.direction === "asc" ? "desc" : "asc",
         };
       } else {
         // Sort ascending on the new column
-        return { key: columnKey, direction: 'asc' };
+        return { key: columnKey, direction: "asc" };
       }
     });
   };
@@ -29,7 +29,7 @@ function BooksTable({ books, favorites, toggleFavorite }) {
     //Note: This part is a bit awkward since I am not showing the sortable icon
     // Ultimately I decided to leave it off so I can get as close to the figma as possible
     // while still allow the sorting capability
-    return sortConfig.direction === 'asc' ? ' ▲' : ' ▼';
+    return sortConfig.direction === "asc" ? " ▲" : " ▼";
   };
 
   // Sort the books array based on sortConfig.
@@ -39,7 +39,7 @@ function BooksTable({ books, favorites, toggleFavorite }) {
     const sorted = [...books].sort((a, b) => {
       let aVal, bVal;
 
-      if (sortConfig.key === 'favorite') {
+      if (sortConfig.key === "favorite") {
         // Sort based on favorite status
         aVal = favorites[`${a.title}-${a.author}-${a.year}`] ? 1 : 0;
         bVal = favorites[`${b.title}-${b.author}-${b.year}`] ? 1 : 0;
@@ -49,8 +49,8 @@ function BooksTable({ books, favorites, toggleFavorite }) {
         bVal = b[sortConfig.key].toLowerCase();
       }
 
-      if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
-      if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
       return 0;
     });
 
@@ -61,31 +61,25 @@ function BooksTable({ books, favorites, toggleFavorite }) {
     <table className="books-table">
       <thead>
         <tr>
-          <th
-            onClick={() => handleSort('title')}
-            style={{ cursor: 'pointer' }}
-          >
-            TITLE{sortIndicator('title')}
+          <th onClick={() => handleSort("title")} style={{ cursor: "pointer" }}>
+            TITLE{sortIndicator("title")}
           </th>
           <th
-            onClick={() => handleSort('author')}
-            style={{ cursor: 'pointer' }}
+            onClick={() => handleSort("author")}
+            style={{ cursor: "pointer" }}
           >
-            AUTHOR{sortIndicator('author')}
+            AUTHOR{sortIndicator("author")}
           </th>
-          <th
-            onClick={() => handleSort('year')}
-            style={{ cursor: 'pointer' }}
-          >
-            YEAR{sortIndicator('year')}
+          <th onClick={() => handleSort("year")} style={{ cursor: "pointer" }}>
+            YEAR{sortIndicator("year")}
           </th>
 
           <th>GENRE</th>
           <th
-            onClick={() => handleSort('favorite')}
-            style={{ cursor: 'pointer' }}
+            onClick={() => handleSort("favorite")}
+            style={{ cursor: "pointer" }}
           >
-            CURRENTLY READING{sortIndicator('favorite')}
+            CURRENTLY READING{sortIndicator("favorite")}
           </th>
         </tr>
       </thead>
@@ -106,7 +100,7 @@ function BooksTable({ books, favorites, toggleFavorite }) {
           })
         ) : (
           <tr>
-            <td colSpan={6} className='not-found'>
+            <td colSpan={6} className="not-found">
               No books found.
             </td>
           </tr>

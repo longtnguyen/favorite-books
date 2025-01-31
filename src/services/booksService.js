@@ -1,14 +1,14 @@
-import data from './booksData.js';
+import data from "./booksData.js";
 
 export default class Books {
-  askListBooks(genre = 'All') {
+  askListBooks(genre = "All") {
     return new Promise((resolve) => {
       window.setTimeout(() => {
         let allBooks = data.books || [];
-        if (genre && genre !== 'All') {
+        if (genre && genre !== "All") {
           const lower = genre.toLowerCase();
           allBooks = allBooks.filter((book) =>
-            book.genre.some((g) => g.toLowerCase() === lower)
+            book.genre.some((g) => g.toLowerCase() === lower),
           );
         }
 

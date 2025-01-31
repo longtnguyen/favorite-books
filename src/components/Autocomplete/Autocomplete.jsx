@@ -11,10 +11,13 @@ function Autocomplete({
   handleGenreSelect,
   setGenreFilter,
 }) {
+  //Note: I am allow user to hit enter and search here, it might be better to not have this feature at all
+  // However, if down the road we decide to allow user to search for partial match
+  // like 'phy' to match biography and physics, this might come in handy
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
-      setGenreFilter(searchInput.trim() === '' ? 'All' : searchInput);
+      setGenreFilter(searchInput.trim() === "" ? "All" : searchInput);
     }
   };
   // Bold the matching part of the genre name

@@ -1,5 +1,5 @@
-import React from 'react';
-import './LoadingIndicator.scss';
+import React from "react";
+import "./LoadingIndicator.scss";
 
 function LoadingIndicator() {
   return (

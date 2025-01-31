@@ -47,7 +47,7 @@ function App() {
             g
               .split(" ")
               .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(" ")
+              .join(" "),
           )
           .sort((a, b) => a.localeCompare(b));
 
@@ -75,7 +75,7 @@ function App() {
         setLoading(false);
       }
     }, 300),
-    []
+    [],
   );
   // Whenever genreFilter changes, fetch the filtered list from server
   useEffect(() => {
@@ -97,7 +97,7 @@ function App() {
 
     // Filter genres based on input (excluding 'All')
     const filtered = allGenres.filter((genre) =>
-      genre.toLowerCase().includes(input.toLowerCase())
+      genre.toLowerCase().includes(input.toLowerCase()),
     );
     setFilteredGenres(filtered);
     setShowSuggestions(true);
