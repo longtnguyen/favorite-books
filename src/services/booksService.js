@@ -11,8 +11,8 @@ export default class Books {
             book.genre.some((g) => g.toLowerCase() === lower)
           );
         }
-        const truncatedBookList = allBooks.slice(0, 10);
-        resolve(truncatedBookList);
+
+        resolve(allBooks);
       }, this._random());
     });
   }

@@ -1,8 +1,8 @@
 import React from 'react';
-
+import './BookRow.scss';
+import { capitalizeEachWord } from '../../utils/helpers';
 function BookRow({ book, isFavorite, toggleFavorite }) {
   const { title, author, year, genre, id } = book;
-
   return (
     <tr
       onClick={() => toggleFavorite(id)}
@@ -16,7 +16,7 @@ function BookRow({ book, isFavorite, toggleFavorite }) {
       <td className="title-cell">{title}</td>
       <td>{author}</td>
       <td>{year}</td>
-      <td>{(genre || []).join(', ')}</td>
+      <td>{(genre || []).map(capitalizeEachWord).join(', ')}</td>
       
       <td
         className="favorite-cell"

@@ -67,7 +67,8 @@ function App() {
       setLoading(true);
       try {
         const filtered = await new Books().askListBooks(filter);
-        setBooks(filtered);
+        const truncatedBookList = filtered.slice(0, 10);
+        setBooks(truncatedBookList);
       } catch (err) {
         console.error("Failed to fetch filtered books:", err);
       } finally {

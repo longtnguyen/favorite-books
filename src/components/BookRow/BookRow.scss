@@ -1,0 +1,22 @@
+@import "../../styles/abstracts/variables";
+
+.favorite-cell {
+  width: 7.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.favorite-star {
+  font-size: $icon-size;
+  color: #ccc;
+  margin-left: 2rem;
+  transition: color 0.3s;
+
+  &.favorited {
+    color: #f39c12;
+  }
+
+  &:hover {
+    color: #ccc;
+  }
+}

@@ -42,26 +42,6 @@
     font-weight: bold;
   }
 
-  .favorite-cell {
-    width: 7.5rem;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .favorite-star {
-    font-size: $star-size;
-    color: $star-color;
-    margin-left: 2rem;
-    transition: color 0.3s;
-
-    &.favorited {
-      color: $star-color-favorited;
-    }
-
-    &:hover {
-      color: darken($star-color, 10%);
-    }
-  }
   .not-found {
     text-align: center;
     vertical-align: middle;
