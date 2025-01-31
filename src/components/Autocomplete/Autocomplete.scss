@@ -2,11 +2,11 @@
 
 .autocomplete-container {
   position: relative;
-  width: 100%;
+  width: 200px;
   max-width: 18.75rem;
 
   #genre-autocomplete {
-    width: 100%;
+    width: 200px;
     padding: 0.5rem;
     font-size: 1rem;
     border: 1px solid $border-color;
@@ -29,13 +29,13 @@
   }
 
   .chevron-icon {
-    right: 1rem;
+    right: 0;
     opacity: 0.6;
     pointer-events: none;
   }
 
   .clear-icon {
-    right: 1rem;
+    right: 0;
     pointer-events: auto;
     cursor: pointer;
     opacity: 0.6;

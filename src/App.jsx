@@ -136,6 +136,7 @@ function App() {
             showSuggestions={showSuggestions}
             filteredGenres={filteredGenres}
             handleGenreSelect={handleGenreSelect}
+            setGenreFilter={setGenreFilter}
           />
         </div>
       </header>

@@ -106,7 +106,7 @@ function BooksTable({ books, favorites, toggleFavorite }) {
           })
         ) : (
           <tr>
-            <td colSpan={6} style={{ textAlign: 'center' }}>
+            <td colSpan={6} className='not-found'>
               No books found.
             </td>
           </tr>
